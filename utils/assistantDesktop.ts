@@ -95,7 +95,7 @@ export async function getClaudeDesktopConfigPath(): Promise<string> {
   )
 }
 
-export async function readClaudeDesktopMcpServers(): Promise<
+export async function readAssistantDesktopMcpServers(): Promise<
   Record<string, McpServerConfig>
 > {
   if (!SUPPORTED_PLATFORMS.includes(getPlatform())) {

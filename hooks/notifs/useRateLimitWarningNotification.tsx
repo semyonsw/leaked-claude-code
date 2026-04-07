@@ -3,8 +3,8 @@ import * as React from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNotifications } from 'src/context/notifications.js';
 import { Text } from 'src/ink.js';
-import { getRateLimitWarning, getUsingOverageText } from 'src/services/claudeAiLimits.js';
-import { useClaudeAiLimits } from 'src/services/claudeAiLimitsHook.js';
+import { getRateLimitWarning, getUsingOverageText } from 'src/services/assistantAiLimits.js';
+import { useAssistantAiLimits } from 'src/services/assistantAiLimitsHook.js';
 import { getSubscriptionType } from 'src/utils/auth.js';
 import { hasClaudeAiBillingAccess } from 'src/utils/billing.js';
 import { getIsRemoteMode } from '../../bootstrap/state.js';
@@ -13,11 +13,11 @@ export function useRateLimitWarningNotification(model) {
   const {
     addNotification
   } = useNotifications();
-  const claudeAiLimits = useClaudeAiLimits();
+  const assistantAiLimits = useAssistantAiLimits();
   let t0;
-  if ($[0] !== claudeAiLimits || $[1] !== model) {
-    t0 = getRateLimitWarning(claudeAiLimits, model);
-    $[0] = claudeAiLimits;
+  if ($[0] !== assistantAiLimits || $[1] !== model) {
+    t0 = getRateLimitWarning(assistantAiLimits, model);
+    $[0] = assistantAiLimits;
     $[1] = model;
     $[2] = t0;
   } else {
@@ -25,9 +25,9 @@ export function useRateLimitWarningNotification(model) {
   }
   const rateLimitWarning = t0;
   let t1;
-  if ($[3] !== claudeAiLimits) {
-    t1 = getUsingOverageText(claudeAiLimits);
-    $[3] = claudeAiLimits;
+  if ($[3] !== assistantAiLimits) {
+    t1 = getUsingOverageText(assistantAiLimits);
+    $[3] = assistantAiLimits;
     $[4] = t1;
   } else {
     t1 = $[4];
@@ -54,12 +54,12 @@ export function useRateLimitWarningNotification(model) {
   const [hasShownOverageNotification, setHasShownOverageNotification] = useState(false);
   let t4;
   let t5;
-  if ($[7] !== addNotification || $[8] !== claudeAiLimits.isUsingOverage || $[9] !== hasShownOverageNotification || $[10] !== usingOverageText) {
+  if ($[7] !== addNotification || $[8] !== assistantAiLimits.isUsingOverage || $[9] !== hasShownOverageNotification || $[10] !== usingOverageText) {
     t4 = () => {
       if (getIsRemoteMode()) {
         return;
       }
-      if (claudeAiLimits.isUsingOverage && !hasShownOverageNotification && (!isTeamOrEnterprise || hasBillingAccess)) {
+      if (assistantAiLimits.isUsingOverage && !hasShownOverageNotification && (!isTeamOrEnterprise || hasBillingAccess)) {
         addNotification({
           key: "limit-reached",
           text: usingOverageText,
@@ -67,14 +67,14 @@ export function useRateLimitWarningNotification(model) {
         });
         setHasShownOverageNotification(true);
       } else {
-        if (!claudeAiLimits.isUsingOverage && hasShownOverageNotification) {
+        if (!assistantAiLimits.isUsingOverage && hasShownOverageNotification) {
           setHasShownOverageNotification(false);
         }
       }
     };
-    t5 = [claudeAiLimits.isUsingOverage, usingOverageText, hasShownOverageNotification, addNotification, hasBillingAccess, isTeamOrEnterprise];
+    t5 = [assistantAiLimits.isUsingOverage, usingOverageText, hasShownOverageNotification, addNotification, hasBillingAccess, isTeamOrEnterprise];
     $[7] = addNotification;
-    $[8] = claudeAiLimits.isUsingOverage;
+    $[8] = assistantAiLimits.isUsingOverage;
     $[9] = hasShownOverageNotification;
     $[10] = usingOverageText;
     $[11] = t4;

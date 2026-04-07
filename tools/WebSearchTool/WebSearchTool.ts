@@ -3,7 +3,7 @@ import { getAPIProvider } from "../../utils/model/providers.js";
 import type { PermissionResult } from "../../utils/permissions/PermissionResult.js";
 import { z } from "zod/v4";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../services/analytics/growthbook.js";
-import { queryModelWithStreaming } from "../../services/api/claude.js";
+import { queryModelWithStreaming } from "../../services/api/assistant.js";
 import { buildTool, type ToolDef } from "../../Tool.js";
 import { lazySchema } from "../../utils/lazySchema.js";
 import { logError } from "../../utils/log.js";

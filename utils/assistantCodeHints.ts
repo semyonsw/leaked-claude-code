@@ -69,7 +69,7 @@ const ATTR_RE = /(\w+)=(?:"([^"]*)"|([^\s/>]+))/g
  * @param command - The command that produced the output; its first
  *   whitespace-separated token is recorded as `sourceCommand`.
  */
-export function extractClaudeCodeHints(
+export function extractAssistantCodeHints(
   output: string,
   command: string,
 ): { hints: ClaudeCodeHint[]; stripped: string } {

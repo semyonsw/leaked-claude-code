@@ -2,7 +2,7 @@ import { c as _c } from "react/compiler-runtime";
 import React, { useCallback } from 'react';
 import { logEvent } from 'src/services/analytics/index.js';
 import { Box, Link, Text } from '../ink.js';
-import type { ExternalClaudeMdInclude } from '../utils/claudemd.js';
+import type { ExternalClaudeMdInclude } from '../utils/assistantmd.js';
 import { saveCurrentProjectConfig } from '../utils/config.js';
 import { Select } from './CustomSelect/index.js';
 import { Dialog } from './design-system/Dialog.js';
@@ -11,7 +11,7 @@ type Props = {
   isStandaloneDialog?: boolean;
   externalIncludes?: ExternalClaudeMdInclude[];
 };
-export function ClaudeMdExternalIncludesDialog(t0) {
+export function AssistantMdExternalIncludesDialog(t0) {
   const $ = _c(18);
   const {
     onDone,

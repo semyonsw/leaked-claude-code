@@ -119,7 +119,7 @@ export type OverageDisabledReason =
   | 'no_limits_configured' // No overage limits configured for account
   | 'unknown' // Unknown reason, should not happen
 
-export type ClaudeAILimits = {
+export type AssistantAILimits = {
   status: QuotaStatus
   // unifiedRateLimitFallbackAvailable is currently used to warn users that set
   // their model to Opus whenever they are about to run out of quota. It does
@@ -136,7 +136,7 @@ export type ClaudeAILimits = {
 }
 
 // Exported for testing only
-export let currentLimits: ClaudeAILimits = {
+export let currentLimits: AssistantAILimits = {
   status: 'allowed',
   unifiedRateLimitFallbackAvailable: false,
   isUsingOverage: false,
@@ -178,10 +178,10 @@ function extractRawUtilization(headers: globalThis.Headers): RawUtilization {
   return result
 }
 
-type StatusChangeListener = (limits: ClaudeAILimits) => void
+type StatusChangeListener = (limits: AssistantAILimits) => void
 export const statusListeners: Set<StatusChangeListener> = new Set()
 
-export function emitStatusChange(limits: ClaudeAILimits) {
+export function emitStatusChange(limits: AssistantAILimits) {
   currentLimits = limits
   statusListeners.forEach(listener => listener(limits))
   const hoursTillReset = Math.round(
@@ -250,12 +250,12 @@ export async function checkQuotaStatus(): Promise<void> {
 
 /**
  * Check if early warning should be triggered based on surpassed-threshold header.
- * Returns ClaudeAILimits if a threshold was surpassed, null otherwise.
+ * Returns AssistantAILimits if a threshold was surpassed, null otherwise.
  */
 function getHeaderBasedEarlyWarning(
   headers: globalThis.Headers,
   unifiedRateLimitFallbackAvailable: boolean,
-): ClaudeAILimits | null {
+): AssistantAILimits | null {
   // Check each claim type for surpassed threshold header
   for (const [claimAbbrev, rateLimitType] of Object.entries(
     EARLY_WARNING_CLAIM_MAP,
@@ -296,13 +296,13 @@ function getHeaderBasedEarlyWarning(
 /**
  * Check if time-relative early warning should be triggered for a rate limit type.
  * Fallback when server doesn't send surpassed-threshold header.
- * Returns ClaudeAILimits if thresholds are exceeded, null otherwise.
+ * Returns AssistantAILimits if thresholds are exceeded, null otherwise.
  */
 function getTimeRelativeEarlyWarning(
   headers: globalThis.Headers,
   config: EarlyWarningConfig,
   unifiedRateLimitFallbackAvailable: boolean,
-): ClaudeAILimits | null {
+): AssistantAILimits | null {
   const { rateLimitType, claimAbbrev, windowSeconds, thresholds } = config
 
   const utilizationHeader = headers.get(
@@ -347,7 +347,7 @@ function getTimeRelativeEarlyWarning(
 function getEarlyWarningFromHeaders(
   headers: globalThis.Headers,
   unifiedRateLimitFallbackAvailable: boolean,
-): ClaudeAILimits | null {
+): AssistantAILimits | null {
   // Try header-based detection first (preferred when API sends the header)
   const headerBasedWarning = getHeaderBasedEarlyWarning(
     headers,
@@ -375,7 +375,7 @@ function getEarlyWarningFromHeaders(
 
 function computeNewLimitsFromHeaders(
   headers: globalThis.Headers,
-): ClaudeAILimits {
+): AssistantAILimits {
   const status =
     (headers.get('anthropic-ratelimit-unified-status') as QuotaStatus) ||
     'allowed'
@@ -461,7 +461,7 @@ export function extractQuotaStatusFromHeaders(
     // If we have any rate limit state, clear it
     rawUtilization = {}
     if (currentLimits.status !== 'allowed' || currentLimits.resetsAt) {
-      const defaultLimits: ClaudeAILimits = {
+      const defaultLimits: AssistantAILimits = {
         status: 'allowed',
         unifiedRateLimitFallbackAvailable: false,
         isUsingOverage: false,

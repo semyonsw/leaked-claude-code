@@ -18,7 +18,7 @@ import { handleMcpjsonServerApprovals } from './services/mcpServerApproval.js';
 import { AppStateProvider } from './state/AppState.js';
 import { onChangeAppState } from './state/onChangeAppState.js';
 import { normalizeApiKeyForConfig } from './utils/authPortable.js';
-import { getExternalClaudeMdIncludes, getMemoryFiles, shouldShowClaudeMdExternalIncludesWarning } from './utils/claudemd.js';
+import { getExternalAssistantMdIncludes, getMemoryFiles, shouldShowAssistantMdExternalIncludesWarning } from './utils/assistantmd.js';
 import { checkHasTrustDialogAccepted, getCustomApiKeyStatus, getGlobalConfig, saveGlobalConfig } from './utils/config.js';
 import { updateDeepLinkTerminalPreference } from './utils/deepLink/terminalPreference.js';
 import { isEnvTruthy, isRunningOnHomespace } from './utils/envUtils.js';
@@ -161,12 +161,12 @@ export async function showSetupScreens(root: Root, permissionMode: PermissionMod
     }
 
     // Check for claude.md includes that need approval
-    if (await shouldShowClaudeMdExternalIncludesWarning()) {
-      const externalIncludes = getExternalClaudeMdIncludes(await getMemoryFiles(true));
+    if (await shouldShowAssistantMdExternalIncludesWarning()) {
+      const externalIncludes = getExternalAssistantMdIncludes(await getMemoryFiles(true));
       const {
-        ClaudeMdExternalIncludesDialog
-      } = await import('./components/ClaudeMdExternalIncludesDialog.js');
-      await showSetupDialog(root, done => <ClaudeMdExternalIncludesDialog onDone={done} isStandaloneDialog externalIncludes={externalIncludes} />);
+        AssistantMdExternalIncludesDialog
+      } = await import('./components/AssistantMdExternalIncludesDialog.js');
+      await showSetupDialog(root, done => <AssistantMdExternalIncludesDialog onDone={done} isStandaloneDialog externalIncludes={externalIncludes} />);
     }
   }
 
@@ -288,11 +288,11 @@ export async function showSetupScreens(root: Root, permissionMode: PermissionMod
   }
 
   // Show Chrome onboarding for first-time Claude in Chrome users
-  if (claudeInChrome && !getGlobalConfig().hasCompletedClaudeInChromeOnboarding) {
+  if (claudeInChrome && !getGlobalConfig().hasCompletedAssistantInChromeOnboarding) {
     const {
-      ClaudeInChromeOnboarding
-    } = await import('./components/ClaudeInChromeOnboarding.js');
-    await showSetupDialog(root, done => <ClaudeInChromeOnboarding onDone={done} />);
+      AssistantInChromeOnboarding
+    } = await import('./components/AssistantInChromeOnboarding.js');
+    await showSetupDialog(root, done => <AssistantInChromeOnboarding onDone={done} />);
   }
   return onboardingShown;
 }
